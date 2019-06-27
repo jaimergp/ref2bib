@@ -152,7 +152,7 @@ async def _parse_arxiv_xml(text: str, identifier: str) -> str:
 
 def _parse_cli():
     p = ArgumentParser()
-    p.add_argument("ids", nargs="+")
+    p.add_argument("ids", nargs="*")
     p.add_argument("-f", "--inputfile")
     p.add_argument("-o", "--outputfile")
     return p.parse_args()
@@ -169,7 +169,10 @@ def _prepare_identifiers(args):
 def main():
     args = _parse_cli()
     identifiers = _prepare_identifiers(args)
-    asyncio.run(process_identifiers(identifiers))
+    if identifiers:
+        asyncio.run(process_identifiers(identifiers))
+    else:
+        raise ValueError("Provide at least one identifier!")
 
 
 # Update this tuple when for handlers are added!
