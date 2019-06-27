@@ -155,7 +155,10 @@ def _parse_cli():
     p.add_argument("ids", nargs="*")
     p.add_argument("-f", "--inputfile")
     p.add_argument("-o", "--outputfile")
-    return p.parse_args()
+    args = p.parse_args()
+    if not (args.ids or args.inputfile):
+        p.error('At least one identifier is required, either via arguments or -f <inputfile>.')
+    return args
 
 
 def _prepare_identifiers(args):
@@ -169,10 +172,8 @@ def _prepare_identifiers(args):
 def main():
     args = _parse_cli()
     identifiers = _prepare_identifiers(args)
-    if identifiers:
-        asyncio.run(process_identifiers(identifiers))
-    else:
-        raise ValueError("Provide at least one identifier!")
+    asyncio.run(process_identifiers(identifiers))
+
 
 
 # Update this tuple when for handlers are added!
